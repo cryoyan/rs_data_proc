@@ -48,7 +48,9 @@ client = None # api.ClientV1(api_key="abcdef0123456789")  #
 
 # more on the asset type are available at: https://developers.planet.com/docs/data/psscene4band/
 
-asset_types=['analytic_sr','analytic_xml','udm'] #   # surface reflectance, metadata, mask file
+# asset_types=['analytic_sr','analytic_xml','udm'] #   # surface reflectance, metadata, mask file
+# For color corrected 3 band data
+asset_types=['visual', 'visual_xml', 'udm']
 # if analytic_sr not available, we will download analytic (supplementary asset types)
 supp_asset_types = ['analytic']
 
@@ -498,7 +500,7 @@ def check_asset_exist(download_item, asset, save_dir):
     :return:
     '''
 
-    # asset_types = ['analytic_sr', 'analytic_xml', 'udm']
+    # asset_types = ['analytic_sr', 'analytic_xml', 'udm', 'visual', 'visual_xml]
     id = download_item['id']
     if asset=='analytic_sr':
         output_name = id + '_3B_AnalyticMS_SR.tif'
@@ -508,6 +510,10 @@ def check_asset_exist(download_item, asset, save_dir):
         output_name = id + '_3B_AnalyticMS_metadata.xml'
     elif asset=='udm':
         output_name = id + '_3B_AnalyticMS_DN_udm.tif'
+    elif asset=='visual':
+        output_name = id + '_3B_Visual.tif'
+    elif asset=='visual_xml':
+        output_name = id + '_3B_Visual_metadata.xml'
     else:
         raise ValueError('unsupported asset type')
         # basic.outputlogMessage('unsupported asset type')
