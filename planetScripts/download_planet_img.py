@@ -585,12 +585,12 @@ def download_planet_images(polygons_json, start_date, end_date, cloud_cover_thr,
 
                 # check 'analytic_sr' is available, if not, d
                 valid_assets = get_downloadable_assets(download_item)
-                # print(valid_assets)
+                print(valid_assets)
                 download_asset_types = asset_types.copy()
-                if 'analytic_sr' not in valid_assets:
-                    basic.outputlogMessage('warning, analytic_sr is not available in the scene (id: %s), download analytic instead'%download_item_id)
-                    download_asset_types.remove('analytic_sr')
-                    download_asset_types.extend(supp_asset_types) # 'analytic'
+                # if 'analytic_sr' not in valid_assets:
+                #     basic.outputlogMessage('warning, analytic_sr is not available in the scene (id: %s), download analytic instead'%download_item_id)
+                #     download_asset_types.remove('analytic_sr')
+                #     download_asset_types.extend(supp_asset_types) # 'analytic'
 
                 #####################################
                 for asset in sorted(assets.keys()):
