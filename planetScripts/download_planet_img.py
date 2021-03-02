@@ -592,6 +592,11 @@ def download_planet_images(polygons_json, start_date, end_date, cloud_cover_thr,
                 #     download_asset_types.remove('analytic_sr')
                 #     download_asset_types.extend(supp_asset_types) # 'analytic'
 
+                if 'visual' not in valid_assets:
+                    basic.outputlogMessage('warning, visual is not available in the scene (id: %s), download analytic instead'%download_item_id)
+                    download_asset_types.remove('visual')
+                    download_asset_types.extend(supp_asset_types) # 'analytic'
+
                 #####################################
                 for asset in sorted(assets.keys()):
                     if asset not in download_asset_types:
