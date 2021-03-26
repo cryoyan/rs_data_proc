@@ -168,10 +168,10 @@ def read_a_meta_of_scene(scene_folder_or_geojson,scene_id_list):
     asset_files = sorted([ os.path.basename(item) for item in assets])
     asset_files =','.join(asset_files)
 
-    image_type = 'analytic'  # 'analytic_sr' (surface reflectance) or 'analytic'
-    sr_tif = io_function.get_file_list_by_pattern(scene_folder,'*_SR.tif')
+    image_type = 'visual'  # 'analytic_sr' (surface reflectance) or 'analytic'
+    sr_tif = io_function.get_file_list_by_pattern(scene_folder,'*_Visual.tif')
     if len(sr_tif) == 1:
-        image_type = 'analytic_sr'
+        image_type = 'visual'
 
     # consider as the downloading time
     if os.path.isfile(geojson_path):
