@@ -34,10 +34,10 @@ code_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..',)
 sys.path.insert(0, os.path.join(code_dir,'planetScripts'))
 
 # sys.path.insert(0, os.path.expanduser('~/codes/PycharmProjects/ChangeDet_DL/dataTools'))
-from  get_planet_image_list import  get_Planet_SR_image_list_overlap_a_polygon
+# from  get_planet_image_list import  get_Planet_SR_image_list_overlap_a_polygon
 
 prePlanetImage = os.path.join(code_dir,'planetScripts','prePlanetImage.py')
-
+getImageList = os.path.join(code_dir, 'planetScripts','get_planet_image_list.py')
 # some issues for the global var in the multiple processes, so remove the temporal foolder in bash
 temporal_dirs = []
 
@@ -182,7 +182,8 @@ def create_moasic_of_each_grid_polygon(id,polygon, polygon_latlon, out_res, clou
         return fin_out
 
     # get image list and cloud cover
-    planet_img_list, cloud_covers = get_Planet_SR_image_list_overlap_a_polygon(polygon_latlon,geojson_list,cloud_cover_thr)
+    # planet_img_list, cloud_covers = get_Planet_SR_image_list_overlap_a_polygon(polygon_latlon,geojson_list,cloud_cover_thr)
+    planet_img_list, cloud_covers = getImageList.get_Planet_Visual_image_list_overlap_a_polygon(polygon_latlon, geojson_list,cloud_cover_thr)
     if len(planet_img_list) < 1:
         basic.outputlogMessage('warning, no images within %d grid'%id)
         return False
