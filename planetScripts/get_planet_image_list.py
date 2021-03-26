@@ -130,6 +130,60 @@ def get_Planet_SR_image_list_overlap_a_polygon(polygon,geojson_list, cloud_cover
 
     return image_path_list, cloud_cover_list
 
+
+def get_Planet_Visual_image_list_overlap_a_polygon(polygon, geojson_list, cloud_cover_thr, save_list_path=None):
+    '''
+    get planet Visual list overlap a polygon (within or overlap part of the polygon)
+    :param polygon: polygon in the shapely format
+    :param geojson_list:
+    :param save_list_path: save the list to a txt file.
+    :return:
+    '''
+
+    image_path_list = []
+    cloud_cover_list = []
+    for geojson_file in geojson_list:
+        # print(geojson_file)
+        with open(geojson_file) as json_obj:
+            geom = json.load(json_obj)
+        img_ext = shape(geom)
+
+        inter = polygon.intersection(img_ext)
+        if inter.is_empty is False:
+            img_dir = os.path.splitext(geojson_file)[0]
+            sr_img_paths = io_function.get_file_list_by_pattern(img_dir, '*_Visual.tif')
+            if len(sr_img_paths) < 1:
+                basic.outputlogMessage('warning, no Visual image in %s, try to find Analytic images' % img_dir)
+                sr_img_paths = io_function.get_file_list_by_pattern(img_dir, '*AnalyticMS.tif')
+
+            meta_data_paths = io_function.get_file_list_by_pattern(img_dir, '*_metadata.xml')
+            if len(sr_img_paths) != len(meta_data_paths):
+                # raise ValueError('the count of metadata files and images is different')
+                basic.outputlogMessage('warning: the count of metadata files and images is different for %s' % img_dir)
+                continue
+
+            if len(sr_img_paths) < 1:
+                basic.outputlogMessage('warning, no Planet Visual image in the %s' % img_dir)
+            elif len(sr_img_paths) > 1:
+                basic.outputlogMessage('warning, more than one Planet Visual image in the %s' % img_dir)
+            else:
+                # check cloud cover
+                cloud_cover = read_cloud_cover(meta_data_paths[0])
+                if cloud_cover > cloud_cover_thr:
+                    continue
+
+                # add image
+                image_path_list.append(sr_img_paths[0])
+                cloud_cover_list.append(cloud_cover)
+
+    if save_list_path is not None:
+        with open(save_list_path, 'w') as f_obj:
+            for image_path in image_path_list:
+                f_obj.writelines(image_path + '\n')
+
+    return image_path_list, cloud_cover_list
+
+
 def read_a_meta_of_scene(scene_folder_or_geojson,scene_id_list):
 
     # get scene id
@@ -385,8 +439,10 @@ def main(options, args):
         return True
 
     for idx, polygon in enumerate(extent_polygons):
-        save_list_txt = 'planet_sr_image_poly_%d.txt'%idx
-        get_Planet_SR_image_list_overlap_a_polygon(polygon,geojson_list,cloud_cover_thr,save_list_path=save_list_txt)
+        # save_list_txt = 'planet_sr_image_poly_%d.txt'%idx
+        save_list_txt = 'planet_visual_image_poly_%d.txt' % idx
+        # get_Planet_SR_image_list_overlap_a_polygon(polygon,geojson_list,cloud_cover_thr,save_list_path=save_list_txt)
+        get_Planet_Visual_image_list_overlap_a_polygon(polygon, geojson_list, cloud_cover_thr, save_list_path=save_list_txt)
 
         pass
 
